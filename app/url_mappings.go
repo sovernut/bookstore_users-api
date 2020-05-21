@@ -14,4 +14,6 @@ func mapUrls() {
 	router.PATCH("/users/:user_id", users.Update) // update part of user
 	router.DELETE("/users/:user_id", users.Delete)
 	router.GET("/internal/users/search", users.Search)
+	router.POST("/users/login", users.Login)
+
 }
