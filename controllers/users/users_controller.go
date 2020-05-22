@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/sovernut/bookstore_oauth-go/oauth"
 	"github.com/sovernut/bookstore_users-api/domain/users"
 	"github.com/sovernut/bookstore_users-api/services"
 	errors "github.com/sovernut/bookstore_users-api/utils/error"
@@ -25,18 +26,33 @@ func getUserId(userIdParam string) (int64, *errors.RestErr) {
 }
 
 func Get(c *gin.Context) {
+
+	if err := oauth.AuthenticateRequest(c.Request); err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+
 	userId, userErr := getUserId(c.Param("user_id"))
 	if userErr != nil {
 		c.JSON(userErr.Status, userErr)
 		return
 	}
 
-	user, saveErr := services.UsersService.GetUser(userId)
-	if saveErr != nil {
-		c.JSON(saveErr.Status, saveErr)
+	user, getErr := services.UsersService.GetUser(userId)
+	if getErr != nil {
+		c.JSON(getErr.Status, getErr)
 		return
 	}
-	c.JSON(http.StatusOK, user.Marshall(c.GetHeader("X-Public") == "true"))
+
+	if oauth.GetCallerId(c.Request) == user.Id {
+		c.JSON(http.StatusOK, user.Marshall(false))
+		fmt.Printf("id %s is equal %s", user.Id, oauth.GetCallerId(c.Request))
+		return
+	}
+
+	fmt.Println("IsPublic = ", oauth.IsPublic(c.Request))
+
+	c.JSON(http.StatusOK, user.Marshall(oauth.IsPublic(c.Request)))
 }
 
 func Create(c *gin.Context) {
