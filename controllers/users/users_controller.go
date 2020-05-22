@@ -10,7 +10,7 @@ import (
 	"github.com/sovernut/bookstore_oauth-go/oauth"
 	"github.com/sovernut/bookstore_users-api/domain/users"
 	"github.com/sovernut/bookstore_users-api/services"
-	errors "github.com/sovernut/bookstore_users-api/utils/error"
+	errors "github.com/sovernut/bookstore_utils-go/rest_errors"
 )
 
 func TestServiceInterface() {
@@ -49,8 +49,8 @@ func Get(c *gin.Context) {
 		fmt.Printf("id %s is equal %s", user.Id, oauth.GetCallerId(c.Request))
 		return
 	}
-
-	fmt.Println("IsPublic = ", oauth.IsPublic(c.Request))
+	fmt.Println("requestBody is ", c.Request)
+	fmt.Println("IsPublic = ", c.Request.Header.Get("headerXPublic"))
 
 	c.JSON(http.StatusOK, user.Marshall(oauth.IsPublic(c.Request)))
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/sovernut/bookstore_users-api/domain/users"
 	"github.com/sovernut/bookstore_users-api/utils/crypto_utils"
 	"github.com/sovernut/bookstore_users-api/utils/date_utils"
-	errors "github.com/sovernut/bookstore_users-api/utils/error"
+	errors "github.com/sovernut/bookstore_utils-go/rest_errors"
 )
 
 var (

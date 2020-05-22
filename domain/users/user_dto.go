@@ -3,7 +3,7 @@ package users
 import (
 	"strings"
 
-	errors "github.com/sovernut/bookstore_users-api/utils/error"
+	errors "github.com/sovernut/bookstore_utils-go/rest_errors"
 )
 
 const (

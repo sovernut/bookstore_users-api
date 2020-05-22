@@ -5,7 +5,9 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 
-	errors "github.com/sovernut/bookstore_users-api/utils/error"
+	builtInError "errors"
+
+	errors "github.com/sovernut/bookstore_utils-go/rest_errors"
 )
 
 const (
@@ -18,7 +20,7 @@ func ParseError(err error) *errors.RestErr {
 		if strings.Contains(err.Error(), ErrorNoRows) {
 			return errors.NewNotFoundError("no record found by given id")
 		}
-		return errors.NewInternalServerError("error parsing db response")
+		return errors.NewInternalServerError("error while trying to ParseError", builtInError.New("error parsing db response"))
 
 	}
 
@@ -27,5 +29,6 @@ func ParseError(err error) *errors.RestErr {
 		return errors.NewBadRequestError("invalid data")
 	}
 
-	return errors.NewInternalServerError("error procesing request")
+	return errors.NewInternalServerError("error while trying to ParseError", builtInError.New("error processing request"))
+
 }
